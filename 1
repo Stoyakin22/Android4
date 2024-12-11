@@ -1,1 +1,63 @@
-<iframe src="https://pl.kotl.in/xnIm9Ssd0"></iframe>
+data class Student(
+    val fullName: String,
+    var grades: MutableList<Int>,
+    val courseNumber: Int,
+    var groupNumber: Int
+) {
+    init {
+        if (grades.size != 3) {
+            throw IllegalArgumentException("Grades list must contain exactly 3 elements.")
+        }
+    }
+
+    fun passExams(newGrades: List<Int>): Boolean {
+        if (newGrades.size != 3) {
+            throw IllegalArgumentException("New grades list must contain exactly 3 elements.")
+        }
+        grades = newGrades.toMutableList()
+        return grades.all { it >= 3 } //Assuming passing grade is 3 or more
+    }
+
+    fun changeGroup(newGroupNumber: Int) {
+        groupNumber = newGroupNumber
+    }
+
+    fun printInfo() {
+        println("ФИО: $fullName")
+        println("Оценки: $grades")
+        println("Номер курса: $courseNumber")
+        println("Номер группы: $groupNumber")
+    }
+}
+
+
+fun main() {
+    val student1 = Student("Иванов Иван Иванович", mutableListOf(5, 4, 5), 1, 101)
+    student1.printInfo()
+
+    println("\nСдача сессии:")
+    val passed = student1.passExams(listOf(4, 3, 5))
+    println("Сессия пройдена: $passed")
+    student1.printInfo()
+
+    println("\nИзменение группы:")
+    student1.changeGroup(102)
+    student1.printInfo()
+
+
+    println("\nПроверка на ошибку при создании студента с некорректным числом оценок:")
+    try {
+        val student2 = Student("Петров Петр Петрович", mutableListOf(5, 4), 2, 201)
+    } catch (e: IllegalArgumentException) {
+        println("Ошибка: ${e.message}")
+    }
+
+
+    println("\nПроверка на ошибку при сдаче сессии с некорректным числом оценок:")
+    try {
+        student1.passExams(listOf(4, 5))
+    } catch (e: IllegalArgumentException) {
+        println("Ошибка: ${e.message}")
+    }
+
+}
